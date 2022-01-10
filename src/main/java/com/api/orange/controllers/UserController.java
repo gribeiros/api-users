@@ -6,19 +6,19 @@ import org.springframework.web.bind.annotation.*;
 
 public interface UserController {
 
-    @GetMapping()
+    @GetMapping(path = "/users")
     public ResponseEntity getAllUsers();
 
-    @GetMapping(path = "/{cpf}")
+    @GetMapping(path = "/user/{cpf}")
     public ResponseEntity getUser(String cpf);
 
-    @PostMapping()
+    @PostMapping(path = "/user")
     public ResponseEntity saveUser(@RequestBody User user);
 
-    @PutMapping(path = "/{cpf}")
+    @PutMapping(path = "/user/{cpf}")
     public ResponseEntity updateUser(String cpf, @RequestBody User user);
 
-    @DeleteMapping(path = "/{cpf}")
+    @DeleteMapping(path = "/user/{cpf}")
     public ResponseEntity deleteUser(String cpf);
 
 }
