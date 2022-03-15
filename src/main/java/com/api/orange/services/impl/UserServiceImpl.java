@@ -34,6 +34,9 @@ public class UserServiceImpl implements UserService {
         User user;
         try {
             user = userRepository.findByCpf(cpf);
+            if(user == null){
+                return new ResponseEntity("Not Found", HttpStatus.NOT_FOUND);
+            }
 
             return new ResponseEntity(user, HttpStatus.ACCEPTED);
         } catch (Exception e) {

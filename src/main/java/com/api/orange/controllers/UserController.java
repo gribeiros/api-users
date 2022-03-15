@@ -10,15 +10,15 @@ public interface UserController {
     public ResponseEntity getAllUsers();
 
     @GetMapping(path = "/user/{cpf}")
-    public ResponseEntity getUser(String cpf);
+    public ResponseEntity getUser(@PathVariable  String cpf);
 
     @PostMapping(path = "/user")
     public ResponseEntity saveUser(@RequestBody User user);
 
     @PutMapping(path = "/user/{cpf}")
-    public ResponseEntity updateUser(String cpf, @RequestBody User user);
+    public ResponseEntity updateUser(@PathVariable String cpf, @RequestBody User user);
 
     @DeleteMapping(path = "/user/{cpf}")
-    public ResponseEntity deleteUser(String cpf);
+    public ResponseEntity deleteUser(@PathVariable String cpf);
 
 }
