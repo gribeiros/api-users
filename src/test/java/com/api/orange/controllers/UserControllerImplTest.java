@@ -1,8 +1,11 @@
 package com.api.orange.controllers;
 
 import com.api.orange.models.User;
+import com.api.orange.repositories.UserRepository;
 import com.api.orange.services.UserService;
+import com.api.orange.services.impl.UserServiceImpl;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -36,10 +39,17 @@ public class UserControllerImplTest {
     }
 
     @Test
-    public void userSeriveGetAllUsers() {
-        UserService userService = userServiceSetup();
-        ResponseEntity responseEntityResult = userService.getAllUsers();
-        assertEquals(HttpStatus.ACCEPTED, responseEntityResult.getStatusCode());
+    public void userServiceGetAllUsers() {
+        try {
+            UserService userService = userServiceSetup();
+            ResponseEntity responseEntityResult = userService.getAllUsers();
+
+            assertEquals(HttpStatus.ACCEPTED, responseEntityResult.getStatusCode());
+            Mockito.verify(userService, Mockito.atLeastOnce()).getAllUsers();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

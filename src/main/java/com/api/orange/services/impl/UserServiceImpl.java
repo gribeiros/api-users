@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -18,6 +19,7 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public ResponseEntity getAllUsers() {
         List<User> users;
         try {
@@ -30,11 +32,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ResponseEntity getUser(String cpf) {
         User user;
         try {
             user = userRepository.findByCpf(cpf);
-            if(user == null){
+            if (user == null) {
                 return new ResponseEntity("Not Found", HttpStatus.NOT_FOUND);
             }
 
@@ -45,21 +48,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional()
     public ResponseEntity saveUser(User user) {
         try {
             if (Objects.isNull(user)) {
                 return new ResponseEntity("Error: User is cannot be null", HttpStatus.PRECONDITION_FAILED);
             }
-
+            if (!Objects.isNull(userRepository.findByCpf(user.getCpf()))) {
+                return new ResponseEntity("Error: User already exist", HttpStatus.PRECONDITION_FAILED);
+            }
             userRepository.save(user);
-
-            return new ResponseEntity("User saved!", HttpStatus.CREATED);
+            return new ResponseEntity(HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity("Error: " + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @Override
+    @Transactional()
     public ResponseEntity updateUser(String cpf, User user) {
         try {
             if (Objects.isNull(user)) {
@@ -79,6 +85,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional()
     public ResponseEntity deleteUser(String cpf) {
         User user;
         try {
@@ -94,5 +101,13 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             return new ResponseEntity("Error: " + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    public UserRepository getUserRepository() {
+        return userRepository;
+    }
+
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 }
